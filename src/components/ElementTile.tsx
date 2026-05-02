@@ -43,29 +43,25 @@ export default function ElementTile({ element }: ElementTileProps) {
       whileTap={{ scale: 0.95 }}
       onClick={() => setSelectedElement(element)}
       className={cn(
-        "relative flex flex-col justify-between items-center p-2 rounded-xl transition-all duration-300",
+        "relative flex flex-col justify-between items-center p-1 sm:p-2 rounded-lg sm:rounded-xl transition-all duration-300 w-full h-full",
         isSelected 
           ? "bg-white ring-2 ring-blue-500 shadow-xl z-20 scale-105" 
           : "shadow-sm border border-white/40"
       )}
       style={{ 
         backgroundColor: isSelected ? '#ffffff' : getHeatmapColor(),
-        gridColumn: element.x,
-        gridRow: element.y,
-        width: 70,
-        height: 70
       }}
     >
-      <span className="absolute top-1 left-1.5 text-[10px] font-medium text-gray-500">
+      <span className="absolute top-0.5 left-1 sm:top-1 sm:left-1.5 text-[8px] sm:text-[10px] font-medium text-gray-500">
         {element.atomicNumber}
       </span>
       <span className={cn(
-        "text-2xl font-bold mt-2",
+        "text-sm sm:text-lg lg:text-2xl font-bold mt-1 sm:mt-2",
         "text-gray-800"
       )}>
         {element.symbol}
       </span>
-      <span className="text-[10px] text-gray-500 truncate w-full text-center px-0.5">
+      <span className="text-[7px] sm:text-[9px] lg:text-[10px] text-gray-500 truncate w-full text-center px-0.5 hidden sm:block">
         {element.name}
       </span>
     </motion.button>

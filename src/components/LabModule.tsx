@@ -11,7 +11,7 @@ import { ALL_ELEMENTS } from '../data/elements';
 import { CATEGORY_COLORS, cn } from '../lib/utils';
 import ReactionsModule from './ReactionsModule';
 import BondingGameModule from './BondingGameModule';
-import ReactionSimulator3D from './ReactionSimulator3D';
+import ReactionLab from './ReactionLab';
 import EquationBalancer from './EquationBalancer';
 
 export default function LabModule() {
@@ -59,7 +59,7 @@ export default function LabModule() {
         ) : activeSubTab === 'bonding' ? (
           <BondingGameModule />
         ) : activeSubTab === 'simulator' ? (
-          <ReactionSimulator3D />
+          <ReactionLab />
         ) : (
           <EquationBalancer />
         )}

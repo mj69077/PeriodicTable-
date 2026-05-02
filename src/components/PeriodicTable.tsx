@@ -17,17 +17,16 @@ export default function PeriodicTable() {
       element.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
       element.atomicNumber.toString().includes(searchQuery);
 
-    // Removed specific favorites tab check since it's handled differently now or via search
     return matchesSearch;
   });
 
   return (
     <div className="relative w-full overflow-x-auto pb-4 custom-scrollbar">
       <div 
-        className="grid gap-2 min-w-max p-4"
+        className="grid gap-1 sm:gap-2 min-w-max p-4"
         style={{ 
-          gridTemplateColumns: 'repeat(18, 70px)',
-          gridTemplateRows: 'repeat(10, 70px)',
+          gridTemplateColumns: 'repeat(18, minmax(40px, 70px))',
+          gridTemplateRows: 'repeat(10, minmax(40px, 70px))',
         }}
       >
         <AnimatePresence mode="popLayout">
@@ -40,6 +39,7 @@ export default function PeriodicTable() {
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.2 }}
               style={{ gridColumn: element.x, gridRow: element.y }}
+              className="w-12 h-12 sm:w-16 sm:h-16 lg:w-[70px] lg:h-[70px]"
             >
               <ElementTile element={element} />
             </motion.div>

@@ -9,6 +9,8 @@ import { Equal, Zap, HelpCircle, RefreshCw, CheckCircle2, AlertCircle } from 'lu
 import { cn } from '../lib/utils';
 import { useElementStore } from '../store/useElementStore';
 
+import { geminiService } from '../services/geminiService';
+
 // Simple chemical equation parser and balancer logic
 interface ElementCount {
   [element: string]: number;
@@ -33,30 +35,27 @@ export default function EquationBalancer() {
   const [error, setError] = useState<string | null>(null);
   const [isBalancing, setIsBalancing] = useState(false);
 
-  const handleBalance = () => {
+  const handleBalance = async () => {
     if (!input.trim()) return;
     setIsBalancing(true);
     setError(null);
     setResult(null);
 
-    // Simulate thinking for UX
-    setTimeout(() => {
-      try {
-        const balanced = balanceEquation(input);
-        setResult(balanced);
-        addXP(15);
-      } catch (err: any) {
-        setError(err.message || 'Could not balance this equation. Check your syntax!');
-      } finally {
-        setIsBalancing(false);
-      }
-    }, 800);
+    try {
+      const balanced = await balanceEquation(input);
+      setResult(balanced);
+      addXP(15);
+    } catch (err: any) {
+      setError(err.message || 'Could not balance this equation. Check your syntax!');
+    } finally {
+      setIsBalancing(false);
+    }
   };
 
   // Mock balancer for common student reactions + basic logic
   // Real balancing algorithm (Matrix method) is complex for a single component, 
   // so we handle common ones and provide high-quality feedback.
-  const balanceEquation = (equation: string): string => {
+  const balanceEquation = async (equation: string): Promise<string> => {
     const cleaned = equation.replace(/\s+/g, '');
     const parts = cleaned.split('->');
     if (parts.length !== 2) throw new Error('Equation must contain "->"');
@@ -80,8 +79,8 @@ export default function EquationBalancer() {
     const key = reactants.sort().join('+') + '->' + products.sort().join('+');
     if (lookup[key]) return lookup[key];
 
-    // Fallback/Generic message if not in common list yet
-    throw new Error('This reaction is too complex for the current lab version. Try H2 + O2 -> H2O!');
+    // Fallback to Gemini for complex ones
+    return await geminiService.balanceEquation(equation);
   };
 
   return (

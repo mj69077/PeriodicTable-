@@ -11,10 +11,11 @@ import { BookOpen, CheckCircle2, Clock, ChevronRight, Play, BarChart3, Sparkles 
 import { CATEGORY_COLORS, cn } from '../lib/utils';
 import TrendsModule from './TrendsModule';
 import AIAssistant from './AIAssistant';
+import CompareModule from './CompareModule';
 
 export default function LearnModule() {
   const { lessonsProgress, completeLesson } = useElementStore();
-  const [activeSubTab, setActiveSubTab] = useState<'lessons' | 'trends' | 'teacher'>('lessons');
+  const [activeSubTab, setActiveSubTab] = useState<'lessons' | 'trends' | 'compare' | 'teacher'>('lessons');
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showQuiz, setShowQuiz] = useState(false);
@@ -165,6 +166,13 @@ export default function LearnModule() {
              {activeSubTab === 'trends' && <motion.div layoutId="learnTab" className="absolute bottom-0 left-0 right-0 h-1 bg-slate-800 rounded-t-full" />}
            </button>
            <button 
+             onClick={() => setActiveSubTab('compare')}
+             className={cn("pb-3 text-xs font-bold uppercase tracking-widest transition-all relative", activeSubTab === 'compare' ? "text-slate-800" : "text-slate-400")}
+           >
+             Compare
+             {activeSubTab === 'compare' && <motion.div layoutId="learnTab" className="absolute bottom-0 left-0 right-0 h-1 bg-slate-800 rounded-t-full" />}
+           </button>
+           <button 
              onClick={() => setActiveSubTab('teacher')}
              className={cn("pb-3 text-xs font-bold uppercase tracking-widest transition-all relative", activeSubTab === 'teacher' ? "text-slate-800" : "text-slate-400")}
            >
@@ -178,6 +186,8 @@ export default function LearnModule() {
       <div className="flex-1 overflow-y-auto no-scrollbar">
         {activeSubTab === 'trends' ? (
           <TrendsModule />
+        ) : activeSubTab === 'compare' ? (
+          <CompareModule />
         ) : activeSubTab === 'teacher' ? (
           <AIAssistant />
         ) : (

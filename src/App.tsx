@@ -46,11 +46,11 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen p-2 sm:p-8 flex items-center justify-center font-sans bg-[#f0f0f5]">
-      <div className="w-full max-w-7xl h-[94vh] flex gap-8 relative overflow-hidden">
+    <div className="min-h-screen p-2 sm:p-4 lg:p-8 flex items-center justify-center font-sans bg-[#f0f0f5]">
+      <div className="w-full max-w-7xl lg:h-[94vh] flex flex-col lg:flex-row gap-4 lg:gap-8 relative overflow-hidden h-full">
         
         {/* LEFT PANEL: Main Content Card */}
-        <div className="w-full lg:w-[480px] flex flex-col bg-white/80 backdrop-blur-xl rounded-[40px] shadow-2xl border border-white/50 overflow-hidden shrink-0">
+        <div className="w-full lg:w-[480px] flex flex-col bg-white/80 backdrop-blur-xl rounded-[32px] lg:rounded-[40px] shadow-2xl border border-white/50 overflow-hidden shrink-0 h-[600px] lg:h-full">
           {/* Header */}
           <div className="flex flex-col p-8 pb-4 gap-6">
             <div className="flex items-center justify-between">

@@ -4,11 +4,13 @@
  */
 
 import { motion, AnimatePresence } from 'motion/react';
-import { MoreVertical, Wind, Box, Heart, Activity, Zap, Radiation, Database } from 'lucide-react';
+import { MoreVertical, Wind, Box, Heart, Activity, Zap, Radiation, Database, Sparkles, Send, Loader2, Info } from 'lucide-react';
+import { useState } from 'react';
 import { useElementStore } from '../store/useElementStore';
 import { ALL_ELEMENTS } from '../data/elements';
 import { CATEGORY_COLORS, cn } from '../lib/utils';
-import AtomModel from './AtomModel';
+import { geminiService } from '../services/geminiService';
+import AtomModel3D from './AtomModel3D';
 import ReactionCard from './ReactionCard';
 
 const isFamousIsotope = (symbol: string, mass: number) => {
@@ -23,6 +25,24 @@ export default function ElementDetail() {
     selectedElement, setSelectedElement, favorites, toggleFavorite,
     compareList, toggleCompare
   } = useElementStore();
+
+  const [aiQuestion, setAiQuestion] = useState('');
+  const [aiAnswer, setAiAnswer] = useState<string | null>(null);
+  const [isAsking, setIsAsking] = useState(false);
+
+  const handleAskAi = async () => {
+    if (!aiQuestion.trim() || !selectedElement) return;
+    setIsAsking(true);
+    setAiAnswer(null);
+    try {
+      const answer = await geminiService.askAboutElement(selectedElement.name, selectedElement.symbol, aiQuestion);
+      setAiAnswer(answer ?? "I'm not sure how to answer that right now.");
+    } catch (error: any) {
+      setAiAnswer("Error: " + error.message);
+    } finally {
+      setIsAsking(false);
+    }
+  };
 
   if (!selectedElement) {
     return (
@@ -117,9 +137,25 @@ export default function ElementDetail() {
         <div className="bg-white rounded-3xl border border-slate-50 p-6 shadow-sm mb-8">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Atom Model Column */}
-            <div className="flex-1 flex flex-col items-center relative py-4">
-              <span className="absolute top-0 left-0 text-[10px] font-bold text-slate-300 uppercase tracking-widest">Atom Model</span>
-              <AtomModel />
+            <div className="lg:w-1/2 flex flex-col relative py-4 space-y-4">
+              <span className="absolute top-0 left-0 text-[10px] font-bold text-slate-300 uppercase tracking-widest">3D Bohr Representation</span>
+              <AtomModel3D element={selectedElement} />
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-slate-50 rounded-2xl p-3 flex items-center gap-3">
+                   <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                   <div>
+                     <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest leading-none mb-1">Configuration</p>
+                     <p className="text-xs font-mono font-bold text-slate-700">{selectedElement.electronConfig}</p>
+                   </div>
+                </div>
+                <div className="bg-slate-50 rounded-2xl p-3 flex items-center gap-3">
+                   <Zap className="text-yellow-500" size={14} />
+                   <div>
+                     <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest leading-none mb-1">Valence e-</p>
+                     <p className="text-xs font-bold text-slate-700">{selectedElement.valenceElectrons}</p>
+                   </div>
+                </div>
+              </div>
             </div>
             
             {/* Physics Bars Column */}
@@ -169,6 +205,54 @@ export default function ElementDetail() {
               <span className="text-xs font-bold text-slate-600 uppercase tracking-wide">{selectedElement.density} g/L</span>
             </div>
           </div>
+        </div>
+
+        {/* AI Chemist Assistant Section */}
+        <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3 mt-8 flex items-center gap-2">
+          <Sparkles size={12} className="text-blue-500" /> AI Chemist Assistant
+        </h3>
+        <div className="bg-slate-900 rounded-3xl p-6 shadow-xl mb-8 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform duration-700">
+             <Sparkles size={80} className="text-blue-400" />
+          </div>
+          
+          <p className="text-xs text-blue-200/60 mb-4 font-medium uppercase tracking-widest">Ask anything about {selectedElement.name}</p>
+          
+          <div className="relative mb-4">
+            <input 
+              type="text"
+              value={aiQuestion}
+              onChange={(e) => setAiQuestion(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleAskAi()}
+              placeholder="How is this element used in space?"
+              className="w-full bg-slate-800 border-none outline-none px-6 py-4 rounded-2xl text-sm text-white placeholder:text-slate-500 pr-12 focus:ring-2 focus:ring-blue-500/50 transition-all"
+            />
+            <button 
+              onClick={handleAskAi}
+              disabled={isAsking || !aiQuestion.trim()}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-blue-600 rounded-xl text-white disabled:opacity-50 disabled:bg-slate-700 transition-all active:scale-95"
+            >
+              {isAsking ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
+            </button>
+          </div>
+
+          <AnimatePresence>
+            {aiAnswer && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="bg-slate-800/50 rounded-2xl p-4 mt-2 border border-slate-700/50 overflow-hidden"
+              >
+                <div className="text-[10px] text-blue-400 font-black uppercase tracking-widest mb-2 flex items-center gap-2">
+                  Assistant Response
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed max-h-48 overflow-y-auto custom-scrollbar">
+                  {aiAnswer}
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Isotope Explorer Section */}

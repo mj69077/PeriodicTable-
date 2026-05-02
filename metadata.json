@@ -1,6 +1,6 @@
 {
   "name": "Atomic Pro - Interactive Periodic Table",
-  "description": "A beautiful, interactive periodic table with real-time search, animated atom models, and detailed element properties.",
+  "description": "A sophisticated interactive periodic table featuring 3D Bohr atom models, a 3D reaction laboratory, an AI-powered chemist assistant, and an advanced equation balancer.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }
