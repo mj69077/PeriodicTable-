@@ -53,7 +53,7 @@ export default function AIAssistant() {
            Ask Teacher
          </h2>
          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-           Powered by Gemini 3
+           Powered by Gemini
          </p>
       </div>
 

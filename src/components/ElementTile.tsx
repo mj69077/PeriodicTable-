@@ -52,11 +52,11 @@ export default function ElementTile({ element }: ElementTileProps) {
         backgroundColor: isSelected ? '#ffffff' : getHeatmapColor(),
       }}
     >
-      <span className="absolute top-0.5 left-1 sm:top-1 sm:left-1.5 text-[8px] sm:text-[10px] font-medium text-gray-500">
+      <span className="absolute top-0.5 left-0.5 sm:top-1 sm:left-1.5 text-[6px] sm:text-[10px] font-medium text-gray-400">
         {element.atomicNumber}
       </span>
       <span className={cn(
-        "text-sm sm:text-lg lg:text-2xl font-bold mt-1 sm:mt-2",
+        "text-xs sm:text-lg lg:text-2xl font-bold mt-1 sm:mt-2",
         "text-gray-800"
       )}>
         {element.symbol}

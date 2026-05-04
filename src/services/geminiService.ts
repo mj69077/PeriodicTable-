@@ -18,7 +18,7 @@ export const geminiService = {
           systemInstruction: "You are an expert chemist assistant. Provide concise, accurate information about chemical elements. Use simple language suitable for students.",
         },
       });
-      return response.text;
+      return response.text || "I'm not sure about that. Let me look it up! 🧪";
     } catch (error) {
       console.error("Gemini API Error:", error);
       throw new Error("I'm having trouble connecting to my chemistry brain right now. Please try again later!");
@@ -35,7 +35,7 @@ export const geminiService = {
           systemInstruction: "You are a laboratory supervisor. Explain chemical reactions clearly and focus on safety and the scientific principles involved.",
         },
       });
-      return response.text;
+      return response.text || "The reaction setup seems to be missing something. 🧪";
     } catch (error) {
       console.error("Gemini API Error:", error);
       throw new Error("The virtual lab is currently undergoing maintenance. Reaction explanation unavailable.");
@@ -52,7 +52,7 @@ export const geminiService = {
           systemInstruction: "You are a stoichiometry expert. You take unbalanced chemical equations and return their balanced versions. No explanation, just the equation.",
         },
       });
-      return response.text.trim();
+      return (response.text || "").trim();
     } catch (error) {
       console.error("Gemini API Error:", error);
       throw new Error("I couldn't balance that one. Try a simpler reaction like H2 + O2 -> H2O.");

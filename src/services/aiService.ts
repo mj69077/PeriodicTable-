@@ -28,6 +28,6 @@ export async function askChemistryTeacher(userMessage: string, currentElement: s
     return response.text;
   } catch (error) {
     console.error("Error calling Gemini API:", error);
-    return "Sorry, something went wrong in the lab! 🧪";
+    return "Sorry, something went wrong in the lab! 🧪 Make sure the Gemini API key is set correctly.";
   }
 }

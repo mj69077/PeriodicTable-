@@ -3,17 +3,44 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { useElementStore } from '../store/useElementStore';
 import { BADGES } from '../data/achievements';
-import { Trophy, Zap, ShieldCheck, Flame, Star, Award } from 'lucide-react';
+import { Trophy, Zap, ShieldCheck, Flame, Star, Award, Download, Code2 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import DownloadModule from './DownloadModule';
+import ProjectInfo from './ProjectInfo';
 
 export default function ProfileModule() {
   const { xp, level, streak, userName, userAvatar, achievements, elementsViewed, lessonsProgress } = useElementStore();
+  const [activeView, setActiveView] = useState<'profile' | 'downloads' | 'project'>('profile');
   
   const xpToNext = 500 - (xp % 500);
   const progressPercent = ((xp % 500) / 500) * 100;
+
+  if (activeView !== 'profile') {
+    return (
+      <div className="h-full flex flex-col bg-white">
+        <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setActiveView('profile')}
+              className="p-2 hover:bg-slate-100 rounded-xl transition-colors text-slate-400 font-bold"
+            >
+              ←
+            </button>
+            <h2 className="text-xl font-black text-slate-800">
+              {activeView === 'downloads' ? 'Download Center' : 'React Project Info'}
+            </h2>
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-auto no-scrollbar">
+          {activeView === 'downloads' ? <DownloadModule /> : <ProjectInfo />}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 h-full overflow-y-auto no-scrollbar space-y-8 bg-slate-50/20 pb-20">
@@ -55,6 +82,29 @@ export default function ProfileModule() {
         <p className="text-[10px] text-slate-300 text-center mt-4 font-bold uppercase tracking-widest">
           {Math.floor(xpToNext)} XP remaining until Level {level + 1}
         </p>
+      </div>
+
+      {/* Download Center Button */}
+      <div className="grid grid-cols-2 gap-4">
+        <button 
+          onClick={() => setActiveView('downloads')}
+          className="flex flex-col items-center justify-center p-6 bg-white rounded-3xl border border-slate-100 shadow-sm hover:bg-blue-50 transition-colors group"
+        >
+          <div className="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+            <Download size={22} />
+          </div>
+          <div className="text-xs font-black text-slate-800 uppercase tracking-widest">Exports</div>
+        </button>
+
+        <button 
+          onClick={() => setActiveView('project')}
+          className="flex flex-col items-center justify-center p-6 bg-white rounded-3xl border border-slate-100 shadow-sm hover:bg-indigo-50 transition-colors group"
+        >
+          <div className="w-12 h-12 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+            <Code2 size={22} />
+          </div>
+          <div className="text-xs font-black text-slate-800 uppercase tracking-widest">Project</div>
+        </button>
       </div>
 
       {/* Stats Summary */}

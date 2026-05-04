@@ -79,7 +79,7 @@ export default function EquationBalancer() {
     const key = reactants.sort().join('+') + '->' + products.sort().join('+');
     if (lookup[key]) return lookup[key];
 
-    // Fallback to Gemini for complex ones
+    // Fallback to AI service for complex ones
     return await geminiService.balanceEquation(equation);
   };
 
